@@ -9,9 +9,16 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Using script with the account:", deployer.address);
 
+    function sleep(ms) {
+        return new Promise ((resolve) => {
+            setTimeout(resolve, ms);
+       })
+    }
+
     var txCount = await ethers.provider.getTransactionCount(deployer.address);
     async function confirmTransactionCount() {
         let newTxCount;
+        await sleep(15000);
         while (true) {
             try {
                 newTxCount = await ethers.provider.getTransactionCount(

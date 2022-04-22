@@ -62,10 +62,16 @@ async function main() {
         console.log("⚠️  No initial farm is defined.");
     }
 
+    function sleep(ms) {
+        return new Promise ((resolve) => {
+            setTimeout(resolve, ms);
+       })
+    }
     // dirty hack to circumvent duplicate nonce submission error
     var txCount = await ethers.provider.getTransactionCount(deployer.address);
     async function confirmTransactionCount() {
         let newTxCount;
+        await sleep(15000);
         while (true) {
             try {
                 newTxCount = await ethers.provider.getTransactionCount(
