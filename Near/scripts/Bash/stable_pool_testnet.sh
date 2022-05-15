@@ -1,0 +1,4 @@
+export FUSDC=dev-1650954469424-66287698100259
+export FUSDT=dev-1650954487434-33761151294954
+export FDAI=dev-1650954499525-96253036746817
+sh utils/Exchange/add_stable_swap_pool.sh "[\"$FUSDC\",\"$FUSDT\",\"$FDAI\"]" [18,18,18] 30 $EX
