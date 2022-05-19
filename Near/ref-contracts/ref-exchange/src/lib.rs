@@ -21,8 +21,8 @@ use crate::admin_fee::AdminFees;
 use crate::pool::Pool;
 use crate::simple_pool::SimplePool;
 use crate::stable_swap::StableSwapPool;
-use crate::utils::{check_token_duplicates, check_pool_duplicates};
-pub use crate::views::{PoolInfo, ContractMetadata};
+use crate::utils::{check_token_duplicates};
+pub use crate::views::{PoolInfo, ContractMetadata, get_pool};
 
 mod account_deposit;
 mod action;
@@ -104,18 +104,14 @@ impl Contract {
         }
     }
 
-    pub fn test(&mut self, tokens: Vec<ValidAccountId>) -> PoolInfo {
-        let ret = check_pool_duplicates(&tokens, &self.pools);
-        ret
-    }
-
     /// Adds new "Simple Pool" with given tokens and given fee.
     /// Attached NEAR should be enough to cover the added storage.
     #[payable]
     pub fn add_simple_pool(&mut self, tokens: Vec<ValidAccountId>) -> u64 {
         self.assert_contract_running();
         check_token_duplicates(&tokens);
-        check_pool_duplicates(&tokens, &self.pools);
+        let test = self.get_pool_by_tokens(tokens[0].to_string(), tokens[1].to_string());
+        assert_ne!(self.pools.len(), test);
         self.internal_add_pool(Pool::SimplePool(SimplePool::new(
             self.pools.len() as u32,
             tokens,
@@ -403,6 +399,19 @@ impl Contract {
         self.pools.push(&pool);
         self.internal_check_storage(prev_storage);
         id
+    }
+
+    fn get_pool_by_tokens(&self, token0: String, token1: String ) -> u64 {
+        for i in 0..self.pools.len() {
+            if self.get_pool(i).token_account_ids.len() == 2 {
+                if self.get_pool(i).token_account_ids[0] == token0 && self.get_pool(i).token_account_ids[1] == token1 {
+                    return i;
+                } else if self.get_pool(i).token_account_ids[0] == token1 && self.get_pool(i).token_account_ids[1] == token0 {
+                    return i;
+                }
+            }
+        }
+        return self.pools.len();
     }
 
     /// Execute sequence of actions on given account. Modifies passed account.

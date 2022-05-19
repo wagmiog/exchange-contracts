@@ -7,7 +7,6 @@ use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{ext_contract, AccountId, Balance, Gas, log};
 use uint::construct_uint;
 use crate::errors::*;
-use crate::pool::Pool;
 use crate::views::{PoolInfo, get_pool};
 
 /// Attach no deposit.
@@ -72,21 +71,6 @@ pub fn add_to_collection(c: &mut LookupMap<AccountId, Balance>, key: &String, va
 pub fn check_token_duplicates(tokens: &[ValidAccountId]) {
     let token_set: HashSet<_> = tokens.iter().map(|a| a.as_ref()).collect();
     assert_eq!(token_set.len(), tokens.len(), "{}", ERR92_TOKEN_DUPLICATES);
-}
-
-pub fn check_pool_duplicates(tokens: &[ValidAccountId], pools: &Vector<Pool>) -> bool {
-    let mut double = false;
-    let mut pool
-    
-    for i in 0..pools.len() {
-        pool = pools.get(i).expect(ERR85_NO_POOL).into();
-        for j in 0..tokens.len() {
-
-        }
-
-    }
-    tes
-    
 }
 
 /// Newton's method of integer square root.

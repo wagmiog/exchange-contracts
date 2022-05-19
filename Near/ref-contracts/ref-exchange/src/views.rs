@@ -148,10 +148,8 @@ impl Contract {
     pub fn get_pool(&self, pool_id: u64) -> PoolInfo {
         self.pools.get(pool_id).expect(ERR85_NO_POOL).into()
     }
-
-    pub fn get_pool_by_tokens(&self, tokens: &[ValidAccountId]) -> u64 {
-        
-    }
+    
+    
 
     /// Returns stable pool information about specified pool.
     pub fn get_stable_pool(&self, pool_id: u64) -> StablePoolInfo {
