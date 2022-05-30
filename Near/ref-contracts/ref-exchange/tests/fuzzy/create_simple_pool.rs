@@ -24,7 +24,7 @@ pub fn create_simple_pool(ctx: &mut OperationContext, rng: &mut Pcg32, root: &Us
     let fee = rng.gen_range(5..FEE_LIMIT);
     let pool_id = call!(
         &operator.user,
-        pool.add_simple_pool(vec![to_va(token1.clone()), to_va(token2.clone())], fee as u32),
+        pool.add_simple_pool(vec![to_va(token1.clone()), to_va(token2.clone())]),
         deposit = to_yocto("1")
     )
     .unwrap_json::<u64>();

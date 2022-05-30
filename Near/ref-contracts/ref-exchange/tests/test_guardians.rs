@@ -132,7 +132,7 @@ fn guardians_scenario_01() {
     // add pool would fail
     let out_come = call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())]),
         deposit = to_yocto("1")
     );
     assert!(!out_come.is_ok());

@@ -1,13 +1,12 @@
 use std::collections::HashSet;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, Vector};
+use near_sdk::collections::{LookupMap};
 use near_sdk::json_types::{ValidAccountId, U128};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{ext_contract, AccountId, Balance, Gas, log};
+use near_sdk::{ext_contract, AccountId, Balance, Gas};
 use uint::construct_uint;
 use crate::errors::*;
-use crate::views::{PoolInfo, get_pool};
 
 /// Attach no deposit.
 pub const NO_DEPOSIT: u128 = 0;

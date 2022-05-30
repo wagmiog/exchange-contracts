@@ -32,7 +32,7 @@ async function main(deployerAccount) {
   const deployer = await near.account(deployerAccount);
   const [exchange, farming, nPng, xNPng] = await connectContracts(near);
   await checkIfFullAccess([deployer, exchange, farming, nPng, xNPng]);
-  await deployContracts(deployer, [exchange, farming, nPng, xNPng]);
+  await deployContracts([exchange, farming, nPng, xNPng]);
   const [EXCHANGE, FARMING, PNG, XPNG] = await initializeContracts(deployer, [exchange, farming, nPng, xNPng]);
   await useNew(EXCHANGE, [{
     owner_id: OWNER,
@@ -44,13 +44,13 @@ async function main(deployerAccount) {
     owner_id: OWNER
   }])
 
-  await useNew(NPNG, [{
+  await useNew(PNG, [{
     minter_id: MINTER
   }])
 
-  await useNew(XNPNG, [{
+  await useNew(XPNG, [{
     owner_id: OWNER,
-    locked_token: NPNG.contractId
+    locked_token: PNG.contractId
   }])
 }
 
@@ -68,7 +68,7 @@ async function useNew(contract, args) {
 async function deployContracts(contractsAccounts) {
   let contractsInfo = [exchangeConst, farmingConst, tokenConst, xTokenConst];
   for (let i = 0; i < contractsAccounts.length; i++) {
-    await contractsAccounts.deployContracts(fs.readFileSync(contractsInfo[i].wasmPath));
+    await contractsAccounts[i].deployContract(fs.readFileSync(contractsInfo[i].wasmPath));
   }
   console.log("Contracts deployed ✅")
 }

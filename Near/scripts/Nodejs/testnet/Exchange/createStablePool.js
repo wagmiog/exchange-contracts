@@ -25,6 +25,11 @@ const config = {
   nodeUrl: "https://rpc.testnet.near.org",
 };
 
+if (process.argv.length < 4) {
+    console.info(HELP);
+    process.exit(1);
+  }
+
 main(process.argv[2]);
 
 async function main(deployerAccount) {
@@ -32,7 +37,7 @@ async function main(deployerAccount) {
     const deployer = await near.account(deployerAccount);
     await checkIfFullAccess([ deployer ]);
     const EXCHANGE = await initializeExchange(deployer, CONTRACTS.exchange);
-    await checkIfOwnerOrGuardians(EXCHANGE);
+    await checkIfOwnerOrGuardians(deployerAccount, EXCHANGE);
     await createPool(deployer, EXCHANGE);
     
 }
@@ -53,7 +58,7 @@ async function createPool(deployer, EXCHANGE) {
         decimals.push(metadata.decimals);
 
     }
-    EXCHANGE.add_stable_swap_pool(
+    const result = await EXCHANGE.add_stable_swap_pool(
         {
             tokens: accounts,
             decimals: decimals,
@@ -62,6 +67,7 @@ async function createPool(deployer, EXCHANGE) {
         "100000000000000",
         "100000000000000000000000"
     );
+    console.log("PoolId :", result);
 }
 
 async function checkIfFullAccess(contractsAccounts) {

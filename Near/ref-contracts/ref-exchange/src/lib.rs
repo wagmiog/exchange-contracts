@@ -22,7 +22,7 @@ use crate::pool::Pool;
 use crate::simple_pool::SimplePool;
 use crate::stable_swap::StableSwapPool;
 use crate::utils::{check_token_duplicates};
-pub use crate::views::{PoolInfo, ContractMetadata, get_pool};
+pub use crate::views::{PoolInfo, ContractMetadata};
 
 mod account_deposit;
 mod action;
@@ -110,8 +110,8 @@ impl Contract {
     pub fn add_simple_pool(&mut self, tokens: Vec<ValidAccountId>) -> u64 {
         self.assert_contract_running();
         check_token_duplicates(&tokens);
-        let test = self.get_pool_by_tokens(tokens[0].to_string(), tokens[1].to_string());
-        assert_ne!(self.pools.len(), test);
+        let exist = self.get_pool_by_tokens(tokens[0].to_string(), tokens[1].to_string());
+        assert_eq!(self.pools.len(), exist);
         self.internal_add_pool(Pool::SimplePool(SimplePool::new(
             self.pools.len() as u32,
             tokens,

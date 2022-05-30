@@ -14,11 +14,6 @@ const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
 
-let accounts = [];
-for (let i = 3; process.argv.length > i; i++) {
-    accounts.push(process.argv[i]);
-}
-
 const config = {
   keyStore,
   networkId: "testnet",
@@ -32,20 +27,22 @@ async function main(deployerAccount) {
     const deployer = await near.account(deployerAccount);
     await checkIfFullAccess([ deployer ]);
     const FARMING = await initializeFarming(deployer, CONTRACTS.farming);
-    await checkIfOwner(FARMING);
+    await checkIfOwner(deployerAccount, FARMING);
     for(let i = 0; i < FARMS.length; i++) {
-        const farmId = await XTOKEN.create_simple_farm(
+        const farmId = await FARMING.create_simple_farm(
             {
-                "terms": 
-                {
-                    "seed_id": CONTRACTS.exchange + "@" + FARMS[i].poolId,
-                    "reward_token": FARMS[i].rewardToken,
-                    "start_at": FARMS[i].start_at,
-                    "reward_per_session": FARMS[i].reward_per_session,
-                    "session_interval": FARMS[i].session_interval
+                args: {
+                    "terms":
+                    {
+                        "seed_id": CONTRACTS.exchange + "@" + FARMS[i].poolId,
+                        "reward_token": FARMS[i].rewardToken,
+                        "start_at": FARMS[i].start_at,
+                        "reward_per_session": FARMS[i].reward_per_session,
+                        "session_interval": FARMS[i].session_interval,
+                    },
                 },
-                "100000000000000",
-                "100000000000000000000"
+                gas: "300000000000000",
+                amount: "1"
             }
         )
         if (FARMS[i].amountRewardToken !== "0" && FARMS[i].amountRewardToken !== undefined) {
@@ -60,12 +57,12 @@ async function loadRewardToken(deployer, FARMING, farmId, rewardAmount) {
         deployer,
         FARMS[i].rewardToken,
         {
-            viewMethods: [ "ft_metadata" ],
+            viewMethods: [ "ft_metadata", "storage_balance_of" ],
             changeMethods: [ "ft_transfer_call", "storage_deposit" ],
             sender: deployer
         }
     );
-    if (await storage_balance_of({account_id: FARMING.contractId}) === null) {
+    if (await TOKEN.storage_balance_of({account_id: FARMING.contractId}) === null) {
         await TOKEN.storage_deposit(
           {
             account_id: FARMING.contractId,
@@ -79,7 +76,7 @@ async function loadRewardToken(deployer, FARMING, farmId, rewardAmount) {
         {
             receiver_id: FARMING.contractId,
             amount: rewardAmount,
-            msg: "{\"Reward\":{\"farm_id\":" + farmId + "}}"
+            msg: "{\"Reward\":{\"farm_id\":\"" + farmId + "\"}}"
         },
         "100000000000000",
         "1"
@@ -102,7 +99,8 @@ async function checkIfFullAccess(contractsAccounts) {
 
 
 async function checkIfOwner(deployer, FARMING) {
-    if(deployer != await FARMING.get_owner()) {
+    const metadata = await FARMING.get_metadata()
+    if(deployer !== metadata.owner_id) {
         console.log("Need to be owner");
         process.exit(1);
     }
@@ -114,7 +112,7 @@ async function initializeFarming(deployer, farming) {
         deployer,
         farming,
         {
-            viewMethods: [ "get_owner" ],
+            viewMethods: [ "get_metadata" ],
             changeMethods: [ "create_simple_farm" ],
             sender: deployer
         }

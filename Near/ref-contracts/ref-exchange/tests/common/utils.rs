@@ -264,19 +264,19 @@ pub fn setup_pool_with_liquidity() -> (
     );
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())]),
         deposit = to_yocto("1")
     )
     .assert_success();
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(eth()), to_va(usdt())], 25),
+        pool.add_simple_pool(vec![to_va(eth()), to_va(usdt())]),
         deposit = to_yocto("1")
     )
     .assert_success();
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(usdt()), to_va(dai())], 25),
+        pool.add_simple_pool(vec![to_va(usdt()), to_va(dai())]),
         deposit = to_yocto("1")
     )
     .assert_success();
@@ -373,7 +373,6 @@ pub fn setup_stable_pool_with_liquidity(
         pool.add_stable_swap_pool(
             (&token_contracts).into_iter().map(|x| x.valid_account_id()).collect(), 
             decimals,
-            pool_fee,
             amp
         ),
         deposit = to_yocto("1"))

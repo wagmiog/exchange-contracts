@@ -372,7 +372,6 @@ pub fn setup_stable_pool_with_liquidity_and_operators(
         pool.add_stable_swap_pool(
             (&token_contracts).into_iter().map(|x| x.valid_account_id()).collect(), 
             decimals,
-            pool_fee,
             amp
         ),
         deposit = to_yocto("1"))

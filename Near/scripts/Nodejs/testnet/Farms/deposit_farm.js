@@ -1,23 +1,18 @@
 const HELP = `Please run this script in the following format:
-    node deployer amount receiver
+    node deposit_farm.js deployer pool_id amount 
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN, FARMS } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
 
 const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
-
-let accounts = [];
-for (let i = 3; process.argv.length > i; i++) {
-    accounts.push(process.argv[i]);
-}
 
 const config = {
   keyStore,
@@ -31,43 +26,28 @@ async function main(deployerAccount) {
     const near = await connect({ ...config, keyStore });
     const deployer = await near.account(deployerAccount);
     await checkIfFullAccess([ deployer ]);
-    await storageAndMint(near, deployer, CONTRACTS.token);
-}
-
-async function storageAndMint(near, deployer, token) {
-    if (process.argv[4] === undefined) {
-        const receiver = process.argv[2];
-    } else {
-        const receiver = process.argv[4];
-    }
-    const TOKEN = new Contract(
-        deployer,
-        token,
-        {
-            viewMethods: [ "ft_metadata" ],
-            changeMethods: [ "mint", "storage_deposit" ],
-            sender: deployer
-        }
-    );
-    for (let i = 0; accounts.length > i; i++) {
-        if (await storage_balance_of({account_id: receiver}) === null) {
-            await TOKEN.storage_deposit(
-                {
-                    account_id: receiver,
-                    registration_only: true
-                },
-                "100000000000000",
-                "10000000000000000000000"
-            );
-        }
-        await TOKEN.mint(
-            {
-                account_id: receiver,
-                amount: process.argv[3]
-            },
+    const FARMING = await initializeFarming(deployer, CONTRACTS.farming);
+    const EXCHANGE = await initializeExchange(deployer, CONTRACTS.exchange);
+    if (await FARMING.storage_balance_of({account_id: deployerAccount}) === null) {
+        await FARMING.storage_deposit(
+          {
+            account_id: deployerAccount,
+            registration_only: false
+          },
+          "100000000000000",
+          "10000000000000000000000"
         );
     }
-  console.log(TOKEN.contractId, "has been distribute");
+    await EXCHANGE.mft_transfer_call({
+        args: {
+            receiver_id: CONTRACTS.farming,
+            token_id: ":" + process.argv[3],
+            amount: process.argv[4],
+            msg: "",
+        }
+    })
+
+    
 }
 
 async function checkIfFullAccess(contractsAccounts) {
@@ -82,4 +62,30 @@ async function checkIfFullAccess(contractsAccounts) {
       }
     }
     console.log("Full Access Key ✅");
-  }
+}
+
+async function initializeFarming(deployer, farming) {
+    const FARMING = new Contract(
+        deployer,
+        farming,
+        {
+            viewMethods: [ "storage_balance_of" ],
+            changeMethods: [ "create_simple_farm", "storage_deposit" ],
+            sender: deployer
+        }
+    );
+    return FARMING;
+}
+
+async function initializeExchange(deployer, exchange) {
+    const EXCHANGE = new Contract(
+        deployer,
+        exchange,
+        {
+            viewMethods: [ ],
+            changeMethods: [ "mft_transfer_call" ],
+            sender: deployer
+        }
+    );
+    return EXCHANGE;
+}

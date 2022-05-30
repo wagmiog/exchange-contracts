@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "bignumber": "^1.1.0",
+    "bignumber.js": "^9.0.2",
     "near-api-js": "^0.44.2",
     "os": "^0.1.2",
     "path": "^0.12.7"

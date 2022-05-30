@@ -49,13 +49,13 @@ async function storageAndMint(near, deployer, token) {
     deployer,
     token,
     {
-      viewMethods: [ "ft_metadata" ],
+      viewMethods: [ "ft_metadata", "storage_balance_of" ],
       changeMethods: [ "mint", "storage_deposit" ],
       sender: deployer
     }
   );
   for (let i = 0; accounts.length > i; i++) {
-    if (await storage_balance_of({account_id: accounts[i]}) === null) {
+    if (await TOKEN.storage_balance_of({account_id: accounts[i]}) === null) {
       await TOKEN.storage_deposit(
         {
           account_id: accounts[i],

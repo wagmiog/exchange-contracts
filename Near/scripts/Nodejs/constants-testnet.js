@@ -1,5 +1,5 @@
 exports.exchangeConst = {
-    wasmPath: "../../../ref-contracts/res/ref_exchange_release.wasm",
+    wasmPath: "../../../ref-contracts/res/ref_exchange.wasm",
     viewMethods: ["getMessages", "get_number_of_pools"],
     changeMethods: ["new"]
 };
@@ -9,7 +9,7 @@ exports.farmingConst = {
     changeMethods: ["new"]
 };
 exports.tokenConst = {
-    wasmPath: "../../ref-token/res/ref_token_release.wasm",
+    wasmPath: "../../../ref-token/res/ref_token.wasm",
     viewMethods: ["getMessages"],
     changeMethods: ["new"]
 };

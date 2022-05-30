@@ -116,7 +116,7 @@ fn setup_pool_with_liquidity() -> (
     );
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())]),
         deposit = to_yocto("1")
     )
     .assert_success();
@@ -255,7 +255,7 @@ fn test_withdraw_failure() {
     );
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())]),
         deposit = to_yocto("1")
     )
     .assert_success();

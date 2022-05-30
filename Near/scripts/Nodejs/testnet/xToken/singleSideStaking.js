@@ -32,7 +32,7 @@ async function main(deployerAccount) {
     const deployer = await near.account(deployerAccount);
     await checkIfFullAccess([ deployer ]);
     const XTOKEN = await initializeXToken(deployer, CONTRACTS.xToken);
-    await checkIfOwner(XTOKEN);
+    await checkIfOwner(deployerAccount, XTOKEN);
     await XTOKEN.reset_reward_genesis_time_in_sec(
         {
             reward_genesis_time_in_sec: STAKING.reward_genesis_time_in_sec
@@ -54,12 +54,12 @@ async function realoadRewardToken(deployer, XTOKEN) {
         deployer,
         CONTRACTS.token,
         {
-            viewMethods: [ "ft_metadata" ],
+            viewMethods: [ "ft_metadata", "storage_balance_of" ],
             changeMethods: [ "ft_transfer_call", "storage_deposit" ],
             sender: deployer
         }
     );
-    if (await storage_balance_of({account_id: XTOKEN.contractId}) === null) {
+    if (await TOKEN.storage_balance_of({account_id: XTOKEN.contractId}) === null) {
         await TOKEN.storage_deposit(
           {
             account_id: XTOKEN.contractId,
