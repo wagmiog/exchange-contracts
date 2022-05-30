@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node get_pools.js from_index limit
+    node rewards_list_info.js from_index limit
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");

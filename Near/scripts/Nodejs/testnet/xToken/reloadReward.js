@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deployer reloadAmount
+    node reloadReward.js deployer reloadAmount
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
@@ -13,6 +13,12 @@ const { functionCall } = require("near-api-js/lib/transaction");
 const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
+
+
+if (process.argv.length !== 4) {
+    console.info(HELP);
+    process.exit(1);
+  }
 
 let accounts = [];
 for (let i = 3; process.argv.length > i; i++) {

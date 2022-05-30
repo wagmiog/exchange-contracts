@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deployer farm_id amount
+    node reload_reward_token.js deployer farm_id amount
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");

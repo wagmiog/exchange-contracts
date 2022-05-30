@@ -24,7 +24,7 @@ const config = {
 };
 
 
-if (process.argv.length < 4) {
+if (process.argv.length <= 4) {
     console.info(HELP);
     process.exit(1);
 }

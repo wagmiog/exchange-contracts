@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node amount addresses1.testnet addresses2.testnet addresses3.testnet ...
+    node allTokensMint.js amount addresses1.testnet addresses2.testnet addresses3.testnet ...
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
@@ -17,6 +17,11 @@ const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
 let accounts = [];
 for (let i = 3; process.argv.length > i; i++) {
     accounts.push(process.argv[i]);
+}
+
+if (process.argv.length <= 4) {
+  console.info(HELP);
+  process.exit(1);
 }
 
 const config = {

@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node set_owner.js owner guardian1 guardian2 guardian3 ...
+    node extend_operators.js owner guardian1 guardian2 guardian3 ...
 `;
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")

@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node get_pools.js farmId
+    node get_seed_info.js seed_id
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");

@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deployer stable1.testnet stable2.testnet stable3.testnet ...
+    node createStablePool.js deployer stable1.testnet stable2.testnet stable3.testnet ...
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
@@ -25,7 +25,7 @@ const config = {
   nodeUrl: "https://rpc.testnet.near.org",
 };
 
-if (process.argv.length < 4) {
+if (process.argv.length < 5) {
     console.info(HELP);
     process.exit(1);
   }

@@ -1,5 +1,6 @@
 const HELP = `Please run this script in the following format:
     node deployer
+    You can param this script with nearConfig.js
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
@@ -13,6 +14,11 @@ const { functionCall } = require("near-api-js/lib/transaction");
 const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
+
+if (process.argv.length !== 2) {
+    console.info(HELP);
+    process.exit(1);
+  }
 
 const config = {
   keyStore,

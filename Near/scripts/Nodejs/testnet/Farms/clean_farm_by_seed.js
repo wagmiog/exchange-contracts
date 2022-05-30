@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node set_owner.js user seed_id
+    node clean_farm_by_seed.js account_id seed_id
 `;
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
@@ -12,7 +12,7 @@ const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
 
-if (process.argv.length < 4) {
+if (process.argv.length !== 4) {
     console.info(HELP);
     process.exit(1);
   }

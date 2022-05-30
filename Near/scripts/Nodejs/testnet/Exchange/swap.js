@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node withdraw_funds.js deployer pool_id token_in amount_in token_out 
+    node swap.js deployer pool_id token_in amount_in token_out 
 `;
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
