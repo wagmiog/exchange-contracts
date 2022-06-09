@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node singleSideStaking deployer reloadAmount
+    node singleSideStaking.js owner.testnet reloadAmount
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");

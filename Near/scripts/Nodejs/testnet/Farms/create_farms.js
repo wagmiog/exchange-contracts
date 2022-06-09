@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deployer
+    node create_farms.js owner.testnet
     You can param this script with nearConfig.js
 `;
 

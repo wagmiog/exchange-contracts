@@ -6,7 +6,7 @@ const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = requi
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
 

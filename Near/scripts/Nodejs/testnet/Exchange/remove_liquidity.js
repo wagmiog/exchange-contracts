@@ -1,11 +1,11 @@
 const HELP = `Please run this script in the following format:
-    node remove_liquidity.js deployer pool_id shares min_amount1 min_amount2
+    node remove_liquidity.js account.testnet pool_id shares min_amount0 min_amount1
 `;
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
 const CREDENTIALS_DIR = ".near-credentials";

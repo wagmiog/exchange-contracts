@@ -5,7 +5,7 @@ const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = requi
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
 const CREDENTIALS_DIR = ".near-credentials";
@@ -41,7 +41,7 @@ async function main(deployerAccount) {
         },
         amount: "1",
     });
-    console.log("Whitelisted Tokens :", await EXCHANGE.get_withelisted_tokens())
+    console.log("Whitelisted Tokens :", await EXCHANGE.get_whitelisted_tokens())
 }
 
 async function checkIfFullAccess(contractsAccounts) {
@@ -63,7 +63,7 @@ async function initializeExchange(deployer, exchange) {
         deployer,
         exchange,
         {
-            viewMethods: [ "get_withelisted_tokens" ],
+            viewMethods: [ "get_whitelisted_tokens" ],
             changeMethods: [ "extend_whitelisted_tokens" ],
             sender: deployer
         }

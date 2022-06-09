@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deployer.testnet
+    node deploy-testnet deployer.testnet
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");

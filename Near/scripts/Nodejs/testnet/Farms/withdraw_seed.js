@@ -1,11 +1,11 @@
 const HELP = `Please run this script in the following format:
-    node withdraw_seed.js owner seed_id amount
+    node withdraw_seed.js account.testnet seed_id amount
 `;
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
 const CREDENTIALS_DIR = ".near-credentials";

@@ -1,22 +1,20 @@
 const HELP = `Please run this script in the following format:
-    node nPngMint.js deployer amount receiver
+    node remove_whitelisted_tokens.js owner/guardian token1 token2 token3 ... 
 `;
-
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
-
 const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
 
-let accounts = [];
+let tokens = [];
 for (let i = 3; process.argv.length > i; i++) {
-    accounts.push(process.argv[i]);
+    tokens.push(process.argv[i]);
 }
 
 const config = {
@@ -25,43 +23,26 @@ const config = {
   nodeUrl: "https://rpc.testnet.near.org",
 };
 
+
+if (process.argv.length < 4) {
+    console.info(HELP);
+    process.exit(1);
+}
+
 main(process.argv[2]);
 
 async function main(deployerAccount) {
     const near = await connect({ ...config, keyStore });
     const deployer = await near.account(deployerAccount);
     await checkIfFullAccess([ deployer ]);
-    await storageAndMint(near, deployer, CONTRACTS.token);
-}
-
-async function storageAndMint(near, deployer, token) {
-    const receiver = process.argv[4];
-    const TOKEN = new Contract(
-        deployer,
-        token,
-        {
-            viewMethods: [ "ft_metadata", "storage_balance_of" ],
-            changeMethods: [ "mint", "storage_deposit" ],
-            sender: deployer
-        }
-    );
-    if (await TOKEN.storage_balance_of({account_id: receiver}) === null) {
-        await TOKEN.storage_deposit(
-            {
-                account_id: receiver,
-                registration_only: true
-            },
-            "100000000000000",
-            "10000000000000000000000"
-        );
-    }
-    await TOKEN.mint(
-        {
-            account_id: receiver,
-            amount: process.argv[3]
+    const EXCHANGE = await initializeExchange(deployer, CONTRACTS.exchange);
+    await EXCHANGE.remove_whitelisted_tokens({
+        args: {
+            tokens: tokens,
         },
-    );
-    console.log(TOKEN.contractId, "has been distribute");
+        amount: "1",
+    });
+    console.log("Whitelisted Tokens :", await EXCHANGE.get_whitelisted_tokens())
 }
 
 async function checkIfFullAccess(contractsAccounts) {
@@ -76,4 +57,17 @@ async function checkIfFullAccess(contractsAccounts) {
       }
     }
     console.log("Full Access Key ✅");
-  }
+}
+
+async function initializeExchange(deployer, exchange) {
+    const EXCHANGE = new Contract(
+        deployer,
+        exchange,
+        {
+            viewMethods: [ "get_whitelisted_tokens" ],
+            changeMethods: [ "remove_whitelisted_tokens" ],
+            sender: deployer
+        }
+    );
+    return EXCHANGE;
+}

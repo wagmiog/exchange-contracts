@@ -5,7 +5,7 @@ const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = requi
 const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
-const { CONTRACTS, OWNER, MINTER, FEES, TESTTOKEN } = require("../../nearConfig");
+const { CONTRACTS, OWNER, MINTER, FEES } = require("../../nearConfig");
 const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../../constants-testnet");
 const { functionCall } = require("near-api-js/lib/transaction");
 const CREDENTIALS_DIR = ".near-credentials";
@@ -30,7 +30,7 @@ async function main(deployerAccount) {
     const deployer = await near.account(deployerAccount);
     await checkIfFullAccess([ deployer ]);
     const FARMING = await initializeFarming(deployer, CONTRACTS.farming);
-    await FARMING.claim_reward_by_farm({
+    await FARMING.claim_reward_by_seed({
         args: {
             seed_id: process.argv[3],
         },

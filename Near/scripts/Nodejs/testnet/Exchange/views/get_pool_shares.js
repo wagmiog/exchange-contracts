@@ -1,3 +1,7 @@
+const HELP = `Please run this script in the following format:
+    node get_pool_shares.js pool_id account_id
+`;
+
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
 const fs = require("fs")
 const path = require("path");
@@ -15,24 +19,32 @@ const config = {
   nodeUrl: "https://rpc.testnet.near.org",
 };
 
-main("0.testnet");
+if (process.argv.length !== 4) {
+    console.info(HELP);
+    process.exit(1);
+}
+
+main(process.argv[3]);
 
 async function main(deployerAccount) {
     const near = await connect({ ...config, keyStore });
     const deployer = await near.account(deployerAccount);
-    const TOKEN = await initializeToken(deployer, CONTRACTS.token);
-    console.log(await TOKEN.ft_metadata());
+    const EXCHANGE = await initializeExchange(deployer, CONTRACTS.exchange);
+    console.log(await EXCHANGE.get_pool_shares({
+        pool_id: parseInt(process.argv[2]),
+        account_id: process.argv[3]
+    }));
 }
 
-async function initializeToken(deployer, token) {
-    const TOKEN = new Contract(
+async function initializeExchange(deployer, exchange) {
+    const EXCHANGE = new Contract(
         deployer,
-        token,
+        exchange,
         {
-            viewMethods: [ "ft_metadata" ],
+            viewMethods: [ "get_pool_shares" ],
             changeMethods: [ ],
             sender: deployer
         }
     );
-    return TOKEN;
+    return EXCHANGE;
 }

@@ -20,19 +20,19 @@ main("0.testnet");
 async function main(deployerAccount) {
     const near = await connect({ ...config, keyStore });
     const deployer = await near.account(deployerAccount);
-    const TOKEN = await initializeToken(deployer, CONTRACTS.token);
-    console.log(await TOKEN.ft_metadata());
+    const EXCHANGE = await initializeExchange(deployer, CONTRACTS.exchange);
+    console.log(await EXCHANGE.get_whitelisted_tokens());
 }
 
-async function initializeToken(deployer, token) {
-    const TOKEN = new Contract(
+async function initializeExchange(deployer, exchange) {
+    const EXCHANGE = new Contract(
         deployer,
-        token,
+        exchange,
         {
-            viewMethods: [ "ft_metadata" ],
-            changeMethods: [ ],
+            viewMethods: ["get_whitelisted_tokens" ],
+            changeMethods: [],
             sender: deployer
         }
     );
-    return TOKEN;
+    return EXCHANGE;
 }

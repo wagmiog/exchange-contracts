@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deposit_farm.js deployer pool_id amount 
+    node deposit_farm.js account.testnet pool_id amount 
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
