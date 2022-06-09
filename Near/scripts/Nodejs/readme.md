@@ -7,7 +7,8 @@ This repo contains all of the Near script
 This script can be used to create account necessary for the deployment with a specified amount
 
 1. Setup accounts that need to be create: 
-```exports.CONTRACTS = {
+```
+exports.CONTRACTS = {
     exchange: "png-exchange-v1.testnet",
     farming: "png-farm-v1.testnet",
     token: "png-token-v1.testnet",
@@ -23,7 +24,8 @@ This script can be used to create account necessary for the deployment with a sp
 This script can be used to deploy all Near Pangolin contracts
 
 1. Setup your deployement: 
-```exports.OWNER = "0xsimo.testnet"
+```
+exports.OWNER = "0xsimo.testnet"
 exports.MINTER = "0xsimo.testnet"
 exports.FEES = {
     exchange_fee: 20,
@@ -364,7 +366,8 @@ Those farm with Ended status and zero unclaimed reward, can be cleaned to save s
 This script can create farms. Only can be called by owner or Operators.
 
 1. Setup accounts that need to be create: 
-```exports.FARMS = [
+```
+exports.FARMS = [
     {
         poolId: 1,
         rewardToken: "png-token-v1.testnet",
@@ -535,7 +538,8 @@ Modify or make the reward genesis. Only can call by Owner
 Launch changeRewardTime.js, resetRewardGenesis.js and reloadReward.js
 
 1. Setup accounts that need to be create: 
-```exports.STAKING = {
+```
+exports.STAKING = {
     reward_genesis_time_in_sec: 1653512400,
     reward_per_sec: "1000000000000000000",
     distribute_before_change: false
