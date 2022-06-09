@@ -7,12 +7,12 @@ This repo contains all of the Near script
 This script can be used to create account necessary for the deployment with a specified amount
 
 1. Setup accounts that need to be create: 
-`exports.CONTRACTS = {`
-`    exchange: "png-exchange-v1.testnet",`
-`    farming: "png-farm-v1.testnet",`
-`    token: "png-token-v1.testnet",`
-`    xToken: "png-xtoken-v1.testnet"`
-`};`
+```exports.CONTRACTS = {
+    exchange: "png-exchange-v1.testnet",
+    farming: "png-farm-v1.testnet",
+    token: "png-token-v1.testnet",
+    xToken: "png-xtoken-v1.testnet"
+};```
 
 2. Use this command to launch the script: 
 `node create-testnet-account.js CREATOR_ACCOUNT.testnet AMOUNT`
@@ -22,12 +22,12 @@ This script can be used to create account necessary for the deployment with a sp
 This script can be used to deploy all Near Pangolin contracts
 
 1. Setup your deployement: 
-`exports.OWNER = "0xsimo.testnet"`
-`exports.MINTER = "0xsimo.testnet"`
-`exports.FEES = {`
-`    exchange_fee: 20,`
-`    referral_fee: 20`
-`}`
+```exports.OWNER = "0xsimo.testnet"
+exports.MINTER = "0xsimo.testnet"
+exports.FEES = {
+    exchange_fee: 20,
+    referral_fee: 20
+}```
 
 2. Use this command to launch the script:
 `node deploy-testnet.js deployer.testnet`
@@ -362,23 +362,23 @@ Those farm with Ended status and zero unclaimed reward, can be cleaned to save s
 This script can create farms. Only can be called by owner or Operators.
 
 1. Setup accounts that need to be create: 
-`exports.FARMS = [`
-`    {`
-`        poolId: 1,`
-`        rewardToken: "png-token-v1.testnet",`
-`        start_at: 1653512400,`
-`        reward_per_session: "1",`
-`        session_interval: 1000`
-`    },`
-`    {`
-`        poolId: 2,`
-`        rewardToken: this.CONTRACTS.token,`
-`        start_at: 1653512400,`
-`        reward_per_session: "1",`
-`        session_interval: 1000,`
-`        amountRewardToken: "0"`
-`    }`
-`]`
+```exports.FARMS = [
+    {
+        poolId: 1,
+        rewardToken: "png-token-v1.testnet",
+        start_at: 1653512400,
+        reward_per_session: "1",
+        session_interval: 1000
+    },
+    {
+        poolId: 2,
+        rewardToken: this.CONTRACTS.token,
+        start_at: 1653512400,
+        reward_per_session: "1",
+        session_interval: 1000,
+        amountRewardToken: "0"
+    }
+]```
 
 2. Use this command to launch the script: 
 `node create_farms.js owner.testnet`
@@ -532,11 +532,11 @@ Modify or make the reward genesis. Only can call by Owner
 Launch changeRewardTime.js, resetRewardGenesis.js and reloadReward.js
 
 1. Setup accounts that need to be create: 
-`exports.STAKING = {`
-`    reward_genesis_time_in_sec: 1653512400,`
-`    reward_per_sec: "1000000000000000000",`
-`    distribute_before_change: false`
-`}`
+```exports.STAKING = {
+    reward_genesis_time_in_sec: 1653512400,
+    reward_per_sec: "1000000000000000000",
+    distribute_before_change: false
+}```
 
 2. Use this command to launch the script:
 `node singleSideStaking.js owner.testnet reloadAmount`
