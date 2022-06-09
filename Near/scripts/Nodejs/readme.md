@@ -12,7 +12,8 @@ This script can be used to create account necessary for the deployment with a sp
     farming: "png-farm-v1.testnet",
     token: "png-token-v1.testnet",
     xToken: "png-xtoken-v1.testnet"
-};```
+};
+```
 
 2. Use this command to launch the script: 
 `node create-testnet-account.js CREATOR_ACCOUNT.testnet AMOUNT`
@@ -27,7 +28,8 @@ exports.MINTER = "0xsimo.testnet"
 exports.FEES = {
     exchange_fee: 20,
     referral_fee: 20
-}```
+}
+```
 
 2. Use this command to launch the script:
 `node deploy-testnet.js deployer.testnet`
@@ -378,7 +380,8 @@ This script can create farms. Only can be called by owner or Operators.
         session_interval: 1000,
         amountRewardToken: "0"
     }
-]```
+]
+```
 
 2. Use this command to launch the script: 
 `node create_farms.js owner.testnet`
@@ -536,7 +539,8 @@ Launch changeRewardTime.js, resetRewardGenesis.js and reloadReward.js
     reward_genesis_time_in_sec: 1653512400,
     reward_per_sec: "1000000000000000000",
     distribute_before_change: false
-}```
+}
+```
 
 2. Use this command to launch the script:
 `node singleSideStaking.js owner.testnet reloadAmount`
