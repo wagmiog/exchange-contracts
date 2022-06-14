@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node unstake.js account_id amount
+    node unstake.js account.testnet amount
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");

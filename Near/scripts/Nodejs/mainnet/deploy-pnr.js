@@ -1,5 +1,5 @@
 const HELP = `Please run this script in the following format:
-    node deployer.near
+    node deploy-testnet deployer.testnet
 `;
 
 const { connect, KeyPair, keyStores, utils, WalletConnection, Contract } = require("near-api-js");
@@ -7,7 +7,7 @@ const fs = require("fs")
 const path = require("path");
 const homedir = require("os").homedir();
 const { CONTRACTS, OWNER, MINTER, FEES } = require("../nearConfig");
-const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../constants-mainnet");
+const { exchangeConst, farmingConst, tokenConst, xTokenConst } = require("../constants-testnet");
 
 const CREDENTIALS_DIR = ".near-credentials";
 const ACCOUNT_ID = process.argv[2]
@@ -30,51 +30,32 @@ main(process.argv[2]);
 async function main(deployerAccount) {
   const near = await connect(config);
   const deployer = await near.account(deployerAccount);
-  const [exchange, farming, nPng, xNPng] = await connectContracts(near);
-  await checkIfFullAccess([deployer, exchange, farming, nPng, xNPng]);
-  await deployContracts(deployer, [exchange, farming, nPng, xNPng]);
-  const [EXCHANGE, FARMING, PNG, XPNG] = await initializeContracts(deployer, [exchange, farming, nPng, xNPng]);
-  
-  await EXCHANGE.new(
-    deployer,
-    EXCHANGE.contractId,
-    {
-      owner_id: OWNER,
-      exchange_fee: FEES.exchange_fee,
-      referral_fee: FEES.referral_fee
-    }
-  );
+  const [nPng] = await connectContracts(near);
+  await checkIfFullAccess([deployer, nPng]);
+  await deployContracts([nPng]);
+  const [PNG] = await initializeContracts(deployer, [nPng]);
 
-  await FARMING.new(
-    deployer,
-    FARMING.contractId,
-    {
-      owner_id: OWNER
-    }
-  );
+  await useNew(PNG, [{
+    minter_id: MINTER
+  }])
 
-  await NPNG.new(
-    deployer,
-    NPNG.contractId,
-    {
-      minter_id: MINTER
-    }
-  );
+}
 
-  await XNPNG.new(
-    deployer,
-    XNPNG.contractId,
-    {
-      owner_id: OWNER,
-      locked_token: NPNG.contractId
-    }
-  );
+async function useNew(contract, args) {
+  try {
+    await contract.new(...args);
+    console.log(contract.contractId, "has been initialized ✅");
+    return (1);
+  } catch (e) {
+    console.log(contract.contractId, "already initialize");
+    return (0)
+  }
 }
 
 async function deployContracts(contractsAccounts) {
-  let contractsInfo = [exchangeConst, farmingConst, tokenConst, xTokenConst];
+  let contractsInfo = [tokenConst];
   for (let i = 0; i < contractsAccounts.length; i++) {
-    await contractsAccounts.deployContracts(fs.readFileSync(contractsInfo[i].wasmPath));
+    await contractsAccounts[i].deployContract(fs.readFileSync(contractsInfo[i].wasmPath));
   }
   console.log("Contracts deployed ✅")
 }
@@ -111,10 +92,6 @@ async function checkIfFullAccess(contractsAccounts) {
 }
 
 async function connectContracts(near) {
-  const exchange = await near.account(CONTRACTS.exchange);
-  const farming = await near.account(CONTRACTS.farming);
   const nPng = await near.account(CONTRACTS.token);
-  const xNPng = await near.account(CONTRACTS.xToken);
-
-  return [exchange, farming, nPng, xNPng];
+  return [nPng];
 }

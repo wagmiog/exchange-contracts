@@ -110,8 +110,7 @@ impl Contract {
     pub fn add_simple_pool(&mut self, tokens: Vec<ValidAccountId>) -> u64 {
         self.assert_contract_running();
         check_token_duplicates(&tokens);
-        let exist = self.get_pool_by_tokens(tokens[0].to_string(), tokens[1].to_string());
-        assert_eq!(self.pools.len(), exist);
+        assert_eq!(false, self.internal_pool_already_exist(vec![tokens[0].to_string(), tokens[1].to_string()]));
         self.internal_add_pool(Pool::SimplePool(SimplePool::new(
             self.pools.len() as u32,
             tokens,
@@ -401,17 +400,15 @@ impl Contract {
         id
     }
 
-    fn get_pool_by_tokens(&self, token0: String, token1: String ) -> u64 {
-        for i in 0..self.pools.len() {
-            if self.get_pool(i).token_account_ids.len() == 2 {
-                if self.get_pool(i).token_account_ids[0] == token0 && self.get_pool(i).token_account_ids[1] == token1 {
-                    return i;
-                } else if self.get_pool(i).token_account_ids[0] == token1 && self.get_pool(i).token_account_ids[1] == token0 {
-                    return i;
-                }
+    fn internal_pool_already_exist(&self, tokens: Vec<String>) -> bool {
+        let mut rev_tokens: Vec<String> = tokens.to_vec();
+        rev_tokens.reverse();
+        for pool in self.pools.iter().filter(|x| x.tokens().len() == 2) {
+            if tokens.to_vec() == pool.tokens() || rev_tokens == pool.tokens() {
+                return true;
             }
         }
-        return self.pools.len();
+        return false
     }
 
     /// Execute sequence of actions on given account. Modifies passed account.
