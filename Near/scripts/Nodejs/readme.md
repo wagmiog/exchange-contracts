@@ -2,6 +2,15 @@
 
 This repo contains all of the Near script
 
+To use Near scripts, install near-cli:
+```
+npm i -g near-cli
+```
+After that you can login with your near account use this command:
+```
+npx near login
+```
+
 ### createAccounts.js
 
 This script can be used to create account necessary for the deployment with a specified amount
