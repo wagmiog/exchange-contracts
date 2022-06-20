@@ -5,6 +5,8 @@ pub struct PrevContractData {
 
     // owner of this contract
     pub owner_id: AccountId,
+
+    pub lock_delay: u32,
     
     // record seeds and the farms under it.
     // seeds: UnorderedMap<SeedId, FarmSeed>,
@@ -49,6 +51,8 @@ pub struct ContractDataV200 {
 
     // owner of this contract
     pub owner_id: AccountId,
+
+    pub lock_delay: u32,
     
     // record seeds and the farms under it.
     // seeds: UnorderedMap<SeedId, FarmSeed>,

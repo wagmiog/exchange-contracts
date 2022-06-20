@@ -34,6 +34,7 @@ fn sim_stable_e100 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             1000
         ),
         deposit = to_yocto("1")
@@ -60,6 +61,7 @@ fn sim_stable_e61 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             0
         ),
         deposit = to_yocto("1")
@@ -72,6 +74,7 @@ fn sim_stable_e61 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             100_000_000
         ),
         deposit = to_yocto("1")
@@ -92,6 +95,18 @@ fn sim_stable_e62 () {
         )
     );
 
+    // invalid fee
+    let outcome = call!(
+        owner,
+        ex.add_stable_swap_pool(
+            vec![token1.valid_account_id(), token2.valid_account_id()], 
+            vec![18, 6],
+            100_000,
+            10000
+        ),
+        deposit = to_yocto("1")
+    );
+    assert_failure(outcome, "E62: illegal fee");
 }
 
 #[test]
@@ -108,6 +123,7 @@ fn sim_stable_e63 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -155,6 +171,7 @@ fn sim_stable_e64 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -222,6 +239,7 @@ fn sim_stable_e65 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -258,6 +276,7 @@ fn sim_stable_e13 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -301,6 +320,7 @@ fn sim_stable_e34 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -368,6 +388,7 @@ fn sim_stable_e68 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -424,6 +445,7 @@ fn sim_stable_e69 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -489,6 +511,7 @@ fn sim_stable_e71 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -531,6 +554,7 @@ fn sim_stable_e14 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -560,6 +584,7 @@ fn sim_stable_e82 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -589,6 +614,7 @@ fn sim_stable_e83 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")
@@ -628,6 +654,7 @@ fn sim_stable_e84 () {
         ex.add_stable_swap_pool(
             vec![token1.valid_account_id(), token2.valid_account_id()], 
             vec![18, 6],
+            25,
             10000
         ),
         deposit = to_yocto("1")

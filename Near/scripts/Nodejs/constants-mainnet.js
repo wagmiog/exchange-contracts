@@ -9,12 +9,17 @@ exports.farmingConst = {
     changeMethods: ["new"]
 };
 exports.tokenConst = {
-    wasmPath: "../../ref-token/res/ref_token_release.wasm",
+    wasmPath: "../../../ref-token/res/ref_token_release.wasm",
     viewMethods: ["getMessages"],
     changeMethods: ["new"]
 };
 exports.xTokenConst = {
     wasmPath: "../../../ref-token/res/xref_token_release.wasm",
+    viewMethods: ["getMessages"],
+    changeMethods: ["new"]
+};
+exports.vampireConst = {
+    wasmPath: "../../../ref-contracts/res/ref_farming_v2.wasm",
     viewMethods: ["getMessages"],
     changeMethods: ["new"]
 };

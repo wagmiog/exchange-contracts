@@ -18,6 +18,11 @@ exports.xTokenConst = {
     viewMethods: ["getMessages"],
     changeMethods: ["new"]
 };
+exports.vampireConst = {
+    wasmPath: "../../../ref-contracts/res/ref_farming_v2.wasm",
+    viewMethods: ["getMessages"],
+    changeMethods: ["new"]
+};
 
 exports.TESTTOKEN = {
     OGS: "dev-1650954366998-91412718863128",

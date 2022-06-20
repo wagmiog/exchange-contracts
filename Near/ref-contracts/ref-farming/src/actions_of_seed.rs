@@ -1,7 +1,7 @@
 
 use std::convert::TryInto;
 use near_sdk::json_types::{U128};
-use near_sdk::{AccountId, Balance, PromiseResult};
+use near_sdk::{AccountId, Balance, PromiseResult, Promise};
 
 use crate::utils::{
     assert_one_yocto, ext_multi_fungible_token, ext_fungible_token, 
@@ -16,8 +16,10 @@ use crate::*;
 impl Contract {
 
     #[payable]
-    pub fn withdraw_seed(&mut self, seed_id: SeedId, amount: U128) {
+    pub fn withdraw_seed(&mut self, seed_id: SeedId, amount: U128) -> Promise {
         assert_one_yocto();
+        assert!(self.data().state == RunningState::Running, "{}", ERR600_CONTRACT_PAUSED);
+
         let sender_id = env::predecessor_account_id();
 
         let amount: Balance = amount.into();
@@ -42,7 +44,7 @@ impl Contract {
                     &env::current_account_id(),
                     0,
                     GAS_FOR_RESOLVE_WITHDRAW_SEED,
-                ));
+                ))
             }
             SeedType::MFT => {
                 let (receiver_id, token_id) = parse_seed_id(&seed_id);
@@ -62,7 +64,7 @@ impl Contract {
                     &env::current_account_id(),
                     0,
                     GAS_FOR_RESOLVE_WITHDRAW_SEED,
-                ));
+                ))
             }
         }
         

@@ -42,6 +42,13 @@ async function main(deployerAccount) {
           "100000000000000",
           "10000000000000000000000"
         );
+        await EXCHANGE.mft_register({
+          args: {
+            token_id: ":" + process.argv[3],
+            account_id: CONTRACTS.farming
+          },
+          amount: "100000000000000000000000"
+        })
     }
     await EXCHANGE.mft_transfer_call({
         args: {
@@ -88,7 +95,7 @@ async function initializeExchange(deployer, exchange) {
         exchange,
         {
             viewMethods: [ ],
-            changeMethods: [ "mft_transfer_call" ],
+            changeMethods: [ "mft_transfer_call", "mft_register" ],
             sender: deployer
         }
     );

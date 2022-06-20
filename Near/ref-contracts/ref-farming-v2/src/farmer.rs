@@ -117,6 +117,7 @@ pub struct Farmer {
     pub seed_amounts: HashMap<SeedId, Balance>,
     /// Powers of various seed tokens the farmer staked.
     pub seed_powers: HashMap<SeedId, Balance>,
+    pub lock_start: HashMap<SeedId, u32>,
     /// Record user_last_rps of farms
     pub user_rps: LookupMap<FarmId, RPS>,
     pub rps_count: u32,
@@ -159,6 +160,13 @@ impl Farmer {
             );
         }
         
+    }
+
+    pub fn change_lock_start(&mut self, seed_id: &SeedId) {
+        self.lock_start.insert(
+            seed_id.clone(), 
+            to_sec(env::block_timestamp())
+        );
     }
 
     /// return seed remained.
@@ -232,6 +240,7 @@ impl VersionedFarmer {
             rewards: HashMap::new(),
             seed_amounts: HashMap::new(),
             seed_powers: HashMap::new(),
+            lock_start: HashMap::new(),
             user_rps: LookupMap::new(StorageKeys::UserRps {
                 account_id: farmer_id.clone(),
             }),

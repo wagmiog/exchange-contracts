@@ -15,7 +15,7 @@ const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const keyStore = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
 
-if (process.argv.length !== 2) {
+if (process.argv.length !== 3) {
     console.info(HELP);
     process.exit(1);
   }

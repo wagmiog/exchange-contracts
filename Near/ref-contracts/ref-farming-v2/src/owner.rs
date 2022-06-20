@@ -39,6 +39,13 @@ impl Contract {
     }
 
     #[payable]
+    pub fn modify_lock_delay(&mut self, lock_delay: u32) {
+        assert_one_yocto();
+        self.assert_owner();
+        self.data_mut().lock_delay = lock_delay;
+    }  
+
+    #[payable]
     pub fn modify_default_farm_expire_sec(&mut self, farm_expire_sec: u32) {
         assert_one_yocto();
         self.assert_owner();
@@ -203,6 +210,7 @@ impl Contract {
                     farmer_count: data.farmer_count,
                     seeds: data.seeds,
                     seeds_slashed: data.seeds_slashed,
+                    lock_delay: data.lock_delay,
                     seeds_lostfound: data.seeds_lostfound,
                     farmers: data.farmers,
                     farms: data.farms,

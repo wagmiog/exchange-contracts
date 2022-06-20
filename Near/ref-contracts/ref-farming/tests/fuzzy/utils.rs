@@ -18,8 +18,8 @@ use crate::fuzzy::{
 
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
     TEST_TOKEN_WASM_BYTES => "../res/test_token.wasm",
-    EXCHANGE_WASM_BYTES => "../res/ref_exchange_release.wasm",
-    FARM_WASM_BYTES => "../res/ref_farming_release.wasm",
+    EXCHANGE_WASM_BYTES => "../res/ref_exchange.wasm",
+    FARM_WASM_BYTES => "../res/ref_farming.wasm",
 }
 
 pub fn deploy_farming(root: &UserAccount, farming_id: AccountId, owner_id: AccountId) -> ContractAccount<Farming> {
@@ -114,7 +114,7 @@ pub fn prepair_env(
     .assert_success();
 
     call!(root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())])
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
         deposit = to_yocto("1")
     ).assert_success();
 

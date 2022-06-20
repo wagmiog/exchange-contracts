@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap};
+use near_sdk::collections::LookupMap;
 use near_sdk::json_types::{ValidAccountId, U128};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{ext_contract, AccountId, Balance, Gas};
@@ -31,6 +31,11 @@ pub const INIT_SHARES_SUPPLY: u128 = 1_000_000_000_000_000_000_000_000;
 construct_uint! {
     /// 256-bit unsigned integer.
     pub struct U256(4);
+}
+
+construct_uint! {
+    /// 384-bit unsigned integer.
+    pub struct U384(6);
 }
 
 /// Volume of swap on the given token.

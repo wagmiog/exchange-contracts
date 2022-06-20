@@ -14,7 +14,7 @@ use test_token::ContractContract as TestToken;
 
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
     TEST_TOKEN_WASM_BYTES => "../res/test_token.wasm",
-    EXCHANGE_WASM_BYTES => "../res/ref_exchange_release.wasm",
+    EXCHANGE_WASM_BYTES => "../res/ref_exchange.wasm",
 }
 
 pub fn should_fail(r: ExecutionResult) {
@@ -116,7 +116,7 @@ fn setup_pool_with_liquidity() -> (
     );
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())]),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
         deposit = to_yocto("1")
     )
     .assert_success();
@@ -255,7 +255,7 @@ fn test_withdraw_failure() {
     );
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())]),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
         deposit = to_yocto("1")
     )
     .assert_success();

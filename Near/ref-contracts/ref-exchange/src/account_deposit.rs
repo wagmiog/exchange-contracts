@@ -132,28 +132,32 @@ impl Account {
 
     /// Deposit amount to the balance of given token.
     pub(crate) fn deposit(&mut self, token: &AccountId, amount: Balance) {
-        if let Some(x) = self.legacy_tokens.remove(token) {
-            // need convert to tokens
-            self.tokens.insert(token, &(amount + x));
-        } else if let Some(x) = self.tokens.get(token) {
-            self.tokens.insert(token, &(amount + x));
-        } else {
-            self.tokens.insert(token, &amount);
+        if amount > 0 {
+            if let Some(x) = self.legacy_tokens.remove(token) {
+                // need convert to tokens
+                self.tokens.insert(token, &(amount + x));
+            } else if let Some(x) = self.tokens.get(token) {
+                self.tokens.insert(token, &(amount + x));
+            } else {
+                self.tokens.insert(token, &amount);
+            }
         }
     }
 
     /// Withdraw amount of `token` from the internal balance.
     /// Panics if `amount` is bigger than the current balance.
     pub(crate) fn withdraw(&mut self, token: &AccountId, amount: Balance) {
-        if let Some(x) = self.legacy_tokens.remove(token) {
-            // need convert to 
-            assert!(x >= amount, "{}", ERR22_NOT_ENOUGH_TOKENS);
-            self.tokens.insert(token, &(x - amount));
-        } else if let Some(x) = self.tokens.get(token) {
-            assert!(x >= amount, "{}", ERR22_NOT_ENOUGH_TOKENS);
-            self.tokens.insert(token, &(x - amount));
-        } else {
-            env::panic(ERR21_TOKEN_NOT_REG.as_bytes());
+        if amount > 0 {
+            if let Some(x) = self.legacy_tokens.remove(token) {
+                // need convert to 
+                assert!(x >= amount, "{}", ERR22_NOT_ENOUGH_TOKENS);
+                self.tokens.insert(token, &(x - amount));
+            } else if let Some(x) = self.tokens.get(token) {
+                assert!(x >= amount, "{}", ERR22_NOT_ENOUGH_TOKENS);
+                self.tokens.insert(token, &(x - amount));
+            } else {
+                env::panic(ERR21_TOKEN_NOT_REG.as_bytes());
+            }
         }
     }
 
@@ -240,6 +244,13 @@ impl Contract {
         self.internal_save_account(&sender_id, account);
     }
 
+    pub fn token_register_of(&self, account_id: ValidAccountId, token_id: ValidAccountId) -> bool {
+        let account_id: AccountId = account_id.into();
+        let token_id: AccountId = token_id.into();
+        let account = self.internal_unwrap_or_default_account(&account_id);
+        account.get_balance(&token_id).is_some()
+    }
+
     /// Withdraws given token from the deposits of given user.
     /// a zero amount means to withdraw all in user's inner account.
     /// Optional unregister will try to remove record of this token from AccountDeposit for given user.
@@ -279,7 +290,7 @@ impl Contract {
         token_id: AccountId,
         sender_id: AccountId,
         amount: U128,
-    ) {
+    ) -> U128 {
         assert_eq!(
             env::promise_results_count(),
             1,
@@ -288,7 +299,7 @@ impl Contract {
         );
         match env::promise_result(0) {
             PromiseResult::NotReady => unreachable!(),
-            PromiseResult::Successful(_) => {}
+            PromiseResult::Successful(_) => amount,
             PromiseResult::Failed => {
                 // This reverts the changes from withdraw function.
                 // If account doesn't exit, deposits to the owner's account as lostfound.
@@ -323,8 +334,9 @@ impl Contract {
                 if failed {
                     self.internal_lostfound(&token_id, amount.0);
                 }
+                0.into()
             }
-        };
+        }
     }
 }
 
