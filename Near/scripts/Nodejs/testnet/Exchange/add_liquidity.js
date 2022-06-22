@@ -49,7 +49,7 @@ async function main(deployerAccount) {
             pool_id: parseInt(process.argv[3]),
             amounts: amounts
         },
-        amount: "790000000000000000000",
+        amount: "900000000000000000000",
     });
     console.log("Liquidity has been added");
 }
@@ -73,7 +73,7 @@ async function storage(deployer, tokenId, to, EXCHANGE) {
         await TOKEN.storage_deposit(
           {
             account_id: to,
-            registration_only: true
+            registration_only: false
           },
           "100000000000000",
           "10000000000000000000000"
@@ -85,6 +85,15 @@ async function storage(deployer, tokenId, to, EXCHANGE) {
             gas: "300000000000000",
             amount: "1"
         })
+    }
+    if (await EXCHANGE.storage_balance_of({account_id: process.argv[2]}) === null) {
+        await EXCHANGE.storage_deposit(
+        {
+            account_id: process.argv[2],
+            registration_only: false
+        },
+        "100000000000000",
+        "10000000000000000000000")
     }
 }
 
@@ -107,8 +116,8 @@ async function initializeExchange(deployer, exchange) {
         deployer,
         exchange,
         {
-            viewMethods: [ "metadata", "get_pool" ],
-            changeMethods: [ "add_liquidity", "register_tokens" ],
+            viewMethods: [ "metadata", "get_pool", "storage_balance_of" ],
+            changeMethods: [ "add_liquidity", "storage_deposit", "register_tokens" ],
             sender: deployer
         }
     );

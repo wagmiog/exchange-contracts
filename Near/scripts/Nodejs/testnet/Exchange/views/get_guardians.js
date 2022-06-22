@@ -29,7 +29,7 @@ async function initializeExchange(deployer, exchange) {
         deployer,
         exchange,
         {
-            viewMethods: ["get_guardians" ],
+            viewMethods: [ "get_guardians" ],
             changeMethods: [],
             sender: deployer
         }
