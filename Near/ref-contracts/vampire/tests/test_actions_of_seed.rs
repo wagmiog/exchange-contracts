@@ -380,6 +380,7 @@ fn cd_account_remove_and_withdraw_seed_slashed(){
         pool.mft_transfer_call(":0".to_string(), to_va(farming_id()), to_yocto("1").into(), None, generate_cd_account_msg(0, 0)),
         deposit = 1
     ).assert_success();
+    console.log(":0".to_string(), to_va(farming_id()), to_yocto("1").into(), None, generate_cd_account_msg(0, 0))
     let current_timestamp = root.borrow_runtime().current_block().block_timestamp;
     assert_eq!(view!(pool.mft_balance_of(":0".to_string(), farmer.valid_account_id()))
         .unwrap_json::<U128>().0, to_yocto("0"));

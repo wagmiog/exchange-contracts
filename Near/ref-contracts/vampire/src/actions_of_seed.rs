@@ -7,6 +7,7 @@ use crate::farm_seed::SeedType;
 use crate::utils::{
     assert_one_yocto, ext_fungible_token, ext_multi_fungible_token, ext_self, parse_seed_id,
     wrap_mft_token_id, GAS_FOR_FT_TRANSFER, GAS_FOR_RESOLVE_WITHDRAW_SEED, MAX_CDACCOUNT_NUM,
+    to_sec,
 };
 use crate::*;
 
@@ -15,8 +16,9 @@ impl Contract {
     #[payable]
     pub fn withdraw_seed(&mut self, seed_id: SeedId, amount: U128) -> Promise {
         assert_one_yocto();
-        let sender_id = env::predecessor_account_id();
 
+        let sender_id = env::predecessor_account_id();
+        assert_eq!(0, self.get_delay_to_withdraw_seed(&seed_id, &sender_id));
         let amount: Balance = amount.into();
 
         // update inner state
@@ -140,6 +142,17 @@ impl Contract {
         }
     }
 
+    pub(crate) fn get_delay_to_withdraw_seed(&self, seed_id: &String, sender_id: &AccountId) -> u32 {
+        let farmer = self.get_farmer(sender_id);
+        assert_eq!(farmer.get_ref().lock_start.get(seed_id).is_some(), true);
+        let lock_start = farmer.get_ref().lock_start.get(seed_id).unwrap();
+        if lock_start + self.data().lock_delay > to_sec(env::block_timestamp())
+        {
+            return (lock_start + self.data().lock_delay) - to_sec(env::block_timestamp())
+        }
+        return 0
+    }
+
     pub(crate) fn internal_seed_deposit(
         &mut self,
         seed_id: &String,
@@ -166,6 +179,7 @@ impl Contract {
         let mut farmer = self.get_farmer(sender_id);
         farmer.get_ref_mut().add_seed_amount(&seed_id, seed_amount);
         farmer.get_ref_mut().add_seed_power(&seed_id, seed_amount);
+        farmer.get_ref_mut().change_lock_start(&seed_id);
         self.data_mut().farmers.insert(sender_id, &farmer);
 
         // 3. update seed
@@ -173,6 +187,7 @@ impl Contract {
         farm_seed.get_ref_mut().add_seed_amount(seed_amount);
         farm_seed.get_ref_mut().add_seed_power(seed_amount);
         self.data_mut().seeds.insert(&seed_id, &farm_seed);
+
 
         // 4. output log/event
         env::log(

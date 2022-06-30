@@ -219,6 +219,10 @@ impl Contract {
         }
     }
 
+    pub fn get_lock_delay(&self) -> u32 {
+        return self.data().lock_delay;
+    }
+
     /// Returns number of farms.
     pub fn get_number_of_farms(&self) -> u64 {
         self.data().farms.len()
@@ -369,6 +373,32 @@ impl Contract {
                 .seed_powers
                 .into_iter()
                 .map(|(seed, bal)| (seed.clone(), U128(bal)))
+                .collect()
+        } else {
+            HashMap::new()
+        }
+    }
+
+    pub fn get_user_locks_start(&self, account_id: ValidAccountId) -> HashMap<SeedId, u32> {
+        if let Some(farmer) = self.get_farmer_wrapped(account_id.as_ref()) {
+            farmer
+                .get()
+                .lock_start
+                .into_iter()
+                .map(|(seed, bal)| (seed.clone(), bal))
+                .collect()
+        } else {
+            HashMap::new()
+        }
+    }
+
+    pub fn get_user_locks_end(&self, account_id: ValidAccountId) -> HashMap<SeedId, u32> {
+        if let Some(farmer) = self.get_farmer_wrapped(account_id.as_ref()) {
+            farmer
+                .get()
+                .lock_start
+                .into_iter()
+                .map(|(seed, bal)| (seed.clone(), bal + self.data().lock_delay))
                 .collect()
         } else {
             HashMap::new()

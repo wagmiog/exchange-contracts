@@ -26,7 +26,7 @@ pub(crate) fn prepair_pool_and_liquidity(
     call!(owner, pool.extend_whitelisted_tokens(vec![to_va(dai()), to_va(eth())]), deposit=1)
     .assert_success();
     call!(root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())])
         deposit = to_yocto("1")
     ).assert_success();
     call!(root, pool.mft_register(":0".to_string(), to_va(farming_id)), deposit = to_yocto("1"))
@@ -52,7 +52,7 @@ pub(crate) fn prepair_pool(
     );
     call!(
         root,
-        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())], 25),
+        pool.add_simple_pool(vec![to_va(dai()), to_va(eth())])
         deposit = to_yocto("1")
     )
     .assert_success();

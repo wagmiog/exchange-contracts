@@ -84,6 +84,8 @@ pub struct ContractData {
 
     // owner of this contract
     owner_id: AccountId,
+
+    lock_delay: u32,
     
     // record seeds and the farms under it.
     // seeds: UnorderedMap<SeedId, FarmSeed>,
@@ -140,6 +142,7 @@ impl Contract {
             data: VersionedContractData::V201(ContractData {
                 owner_id: owner_id.into(),
                 farmer_count: 0,
+                lock_delay: 0,
                 seeds: UnorderedMap::new(StorageKeys::Seed),
                 seeds_slashed: UnorderedMap::new(StorageKeys::SeedSlashed),
                 seeds_lostfound: UnorderedMap::new(StorageKeys::SeedLostfound),
