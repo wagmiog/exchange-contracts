@@ -845,6 +845,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.43.tgz#6cf47894da4a4748c62fccf720ba269e1b1ff5a4"
   integrity sha512-HCfJdaYqJX3BCzeihgZrD7b85Cu05OC/GVJ4kEYIflwUs4jbnUlLLWoq7hw1LBcdvUyehO+gr6P5JQ895/2ZfA==
 
+"@types/node@^17.0.41":
+  version "17.0.41"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.41.tgz#1607b2fd3da014ae5d4d1b31bc792a39348dfb9b"
+  integrity sha512-xA6drNNeqb5YyV5fO3OAEsnXLfO7uF0whiOfPTz5AeDo8KeZFmODKnvwPymMNO8qE/an8pVY/O50tig2SQCrGw==
+
 "@types/pbkdf2@^3.0.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@types/pbkdf2/-/pbkdf2-3.1.0.tgz#039a0e9b67da0cdc4ee5dab865caa6b267bb66b1"
